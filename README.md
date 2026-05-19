@@ -1,4 +1,4 @@
-#AR Encounter-and-Capture_Creature(가제)
+# AR Encounter-and-Capture_Creature(가제)
 
 ## 📖 프로젝트 개요
 본 프로젝트는 **컴퓨터 비전(Computer Vision) 기술과 제스처 인식**을 활용하여 구현한 증강현실(AR) 기반 상호작용형 몬스터 배틀 프로그램입니다. 
