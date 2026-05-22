@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR 몬스터 어드벤처</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { text-align: center; font-family: sans-serif; background: #222; color: white; margin: 0; padding: 10px; }
+        #mobile-view { margin-top: 20%; display: none; }
+        button { padding: 20px 40px; font-size: 20px; cursor: pointer; border-radius: 10px; background: #4CAF50; color: white; border: none; font-weight: bold; }
+        
+        #dashboard-view { display: none; padding: 20px; }
+        .video-container { display: flex; flex-direction: row; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        .video-box { background: #333; padding: 10px; border-radius: 10px; min-width: 320px; }
+        img { width: 100%; max-width: 500px; border-radius: 8px; border: 2px solid #555; }
+        
+        #qr-area { background: #444; padding: 20px; border-radius: 12px; display: inline-block; margin-bottom: 20px; }
+        .qr-img { width: 200px; height: 200px; border: 4px solid white; border-radius: 4px; }
+        
+        /* [추가] 종료 버튼 스타일 */
+        #shutdownBtn { background-color: #f44336; padding: 10px 20px; font-size: 16px; margin-bottom: 15px; }
+        #shutdownBtn:hover { background-color: #d32f2f; }
+    </style>
+</head>
+<body>
+    <div id="mobile-view">
+        <h2>휴대폰 AR 카메라</h2>
+        <button id="startBtn">카메라 켜기 (터치)</button>
+        <p id="status" style="margin-top: 20px; color: #aaa;">노트북 화면을 확인하세요!</p>
+        <video id="video" autoplay playsinline muted style="display: none;"></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+    </div>
+
+    <div id="dashboard-view">
+        <h2>AR 몬스터 게임 대시보드</h2>
+        
+        <button id="shutdownBtn">🚨 프로그램 완전 종료</button>
+        
+        <br>
+
+        <div id="qr-area">
+            <h3>📱 휴대폰 연결을 위해 QR 코드를 스캔하세요</h3>
+            <img class="qr-img" src="{{ qr_img }}" alt="QR Code">
+            <p style="font-size: 14px; color: #ccc; margin-top: 10px;">주소: {{ public_url }}</p>
+        </div>
+
+        <div class="video-container">
+            <div class="video-box">
+                <h3>휴대폰 카메라 (AR 렌더링)</h3>
+                <img id="phoneView" src="" alt="휴대폰 카메라 연결 대기 중...">
+            </div>
+            <div class="video-box">
+                <h3>노트북 카메라 (제스처 인식)</h3>
+                <img id="laptopView" src="" alt="웹캠 로딩 중...">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            document.getElementById('mobile-view').style.display = 'block';
+            const startBtn = document.getElementById('startBtn');
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d', { willReadFrequently: true });
+
+            startBtn.addEventListener('click', () => {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.play();
+                        startBtn.style.display = 'none';
+                        document.getElementById('status').innerText = "전송 중... 이 화면을 유지하세요.";
+                        document.getElementById('status').style.color = "#4CAF50";
+                    })
+                    .catch(err => alert("권한 허용 필요: " + err));
+            });
+
+            video.addEventListener('play', () => {
+                setInterval(() => {
+                    if (video.videoWidth > 0 && video.videoHeight > 0) {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const dataURL = canvas.toDataURL('image/jpeg', 0.5); 
+                        socket.emit('phone_frame_send', dataURL);
+                    }
+                }, 100); 
+            });
+
+        } else {
+            document.getElementById('dashboard-view').style.display = 'block';
+            const phoneView = document.getElementById('phoneView');
+            const laptopView = document.getElementById('laptopView');
+            const qrArea = document.getElementById('qr-area');
+
+            // [추가] 종료 버튼 클릭 이벤트
+            const shutdownBtn = document.getElementById('shutdownBtn');
+            shutdownBtn.addEventListener('click', () => {
+                if (confirm('게임을 정말 종료하시겠습니까?\n(파이썬 서버와 카메라가 모두 꺼집니다)')) {
+                    socket.emit('shutdown_server');
+                    document.body.innerHTML = "<h2 style='margin-top:20%; color:#f44336;'>서버가 안전하게 종료되었습니다.<br>터미널(VScode)을 확인해주세요.</h2>";
+                }
+            });
+
+            socket.on('update_dashboard', (data) => {
+                if (data.laptop_img) laptopView.src = data.laptop_img;
+                
+                if (data.phone_img) {
+                    phoneView.src = data.phone_img;
+                    if (qrArea.style.display !== 'none') qrArea.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
