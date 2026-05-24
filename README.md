@@ -36,3 +36,24 @@
           -> 웹페이지에서 돌리는 것으로 결정. 전체화면으로 진행
 - [ ] 7. 3D 에셋들의 모션은 어떻게 할 것인가 
 
+## 📜 Credits & 3D Assets
+This project uses the following 3D models from Sketchfab. All models are licensed under [Creative Commons Attribution 4.0 International (CC-BY-4.0)](http://creativecommons.org/licenses/by/4.0/).
+
+* **Small Low Res Bush** * Author: [AlkaliDragon](https://sketchfab.com/AlkaliDragon)
+  * Source: [Sketchfab Link](https://sketchfab.com/3d-models/small-low-res-bush-b04c3f2143c74fcdac16b1ba2a53d97b)
+
+* **Desert Silent Assassin Model Low Poly** (Main Character)
+  * Author: [Pigcraft](https://sketchfab.com/s8819296)
+  * Source: [Sketchfab Link](https://sketchfab.com/3d-models/desert-silent-assassin-model-low-poly-4f3e07690d8f4428a5b97e2cbef0c5b4)
+
+* **Gigantic Lowpoly monster fish** (Creature 1)
+  * Author: [Khyoocumber](https://sketchfab.com/Khyoocumber)
+  * Source: [Sketchfab Link](https://sketchfab.com/3d-models/gigantic-lowpoly-monster-fish-2bddbbde07474d4aae424c06b4b603d7)
+
+* **Lowpoly Ice tiger pet** (Creature 2)
+  * Author: [Khyoocumber](https://sketchfab.com/Khyoocumber)
+  * Source: [Sketchfab Link](https://sketchfab.com/3d-models/lowpoly-ice-tiger-pet-6a6c23f54d34438ab3a8b514c0fd7278)
+
+* **Lowpoly mech boss tripple canons** (Creature 3)
+  * Author: [Khyoocumber](https://sketchfab.com/Khyoocumber)
+  * Source: [Sketchfab Link](https://sketchfab.com/3d-models/lowpoly-mech-boss-tripple-canons-0e68941739814732818502113f032d9d)
