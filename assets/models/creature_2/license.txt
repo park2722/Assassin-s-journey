@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lowpoly Ice tiger pet
+* source:	https://sketchfab.com/3d-models/lowpoly-ice-tiger-pet-6a6c23f54d34438ab3a8b514c0fd7278
+* author:	Khyoocumber (https://sketchfab.com/Khyoocumber)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lowpoly Ice tiger pet" (https://sketchfab.com/3d-models/lowpoly-ice-tiger-pet-6a6c23f54d34438ab3a8b514c0fd7278) by Khyoocumber (https://sketchfab.com/Khyoocumber) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

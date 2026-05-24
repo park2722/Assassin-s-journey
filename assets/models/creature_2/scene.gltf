@@ -1,0 +1,403 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2188,
+      "max": [
+        0.007538513746112585,
+        -7.824637577868998e-05,
+        0.02548161894083023
+      ],
+      "min": [
+        -0.00753851467743516,
+        -0.01780158095061779,
+        -0.012998889200389385
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 26256,
+      "componentType": 5126,
+      "count": 2188,
+      "max": [
+        0.999866783618927,
+        1.0,
+        0.9976703524589539
+      ],
+      "min": [
+        -0.9998668432235718,
+        -0.9815541505813599,
+        -0.9834743142127991
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2188,
+      "max": [
+        0.9942721128463745,
+        0.9912813901901245
+      ],
+      "min": [
+        0.003984446171671152,
+        0.002664858940988779
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 7836,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 52512,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        0.907669186592102,
+        0.9337429404258728,
+        0.5832859873771667
+      ],
+      "min": [
+        -1.1443819999694824,
+        -1.0346599817276,
+        -0.2517679035663605
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 54480,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        0.937589704990387,
+        0.9299284219741821,
+        0.9999144077301025
+      ],
+      "min": [
+        -0.970806360244751,
+        -0.9628801941871643,
+        0.12594912946224213
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        1.0,
+        1.0,
+        1.0,
+        0.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 17504,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        0.8027747273445129,
+        0.7631275057792664
+      ],
+      "min": [
+        0.23992358148097992,
+        0.2670166492462158
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 31344,
+      "componentType": 5125,
+      "count": 741,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Khyoocumber (https://sketchfab.com/Khyoocumber)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/lowpoly-ice-tiger-pet-6a6c23f54d34438ab3a8b514c0fd7278",
+      "title": "Lowpoly Ice tiger pet"
+    },
+    "generator": "Sketchfab-15.33.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 34308,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 18816,
+      "byteOffset": 34308,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56448,
+      "byteOffset": 53124,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2624,
+      "byteOffset": 109572,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 112196,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_unlit"
+  ],
+  "images": [
+    {
+      "uri": "textures/Mmengchong_10008_Mmengchong_T_10008_uv_baseColor.png"
+    },
+    {
+      "uri": "textures/Mmengchong_10008_bingwenli_zhz_003_heat_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Mmengchong_10008_Mmengchong_T_10008_uv",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Mmengchong_10008_bingwenli_zhz_003_heat",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Mmengchong_10008_pet_006_0_Mmengchong_10008_Mmengchong_T_10008_uv_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Mmengchong_10008_bingwenli_zhz_003_heat_Mmengchong_10008_bingwenli_zhz_003_heat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "COLOR_0": 6,
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 7
+          },
+          "indices": 8,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Mmengchong_10008.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4,
+        6
+      ],
+      "name": "Mmengchong_10008_Mmengchong_10008"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        44.471534729003906,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -44.471534729003906,
+        5.446192265904499e-15,
+        0.0,
+        0.0,
+        -5.446192265904499e-15,
+        -44.471534729003906,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Mmengchong_10008_pet_006_0"
+    },
+    {
+      "mesh": 0,
+      "name": "Mmengchong_10008_pet_006_0_Mmengchong_10008_Mmengchong_T_10008_uv_0"
+    },
+    {
+      "children": [
+        7
+      ],
+      "name": "Mmengchong_10008_EF_Mmengchong_10008_zhz"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        0.44988585563486544,
+        0.012581001634165881,
+        -0.08152414124020169,
+        0.0,
+        -0.09124625010758565,
+        0.0759012013620102,
+        -0.4918234470770649,
+        0.0,
+        1.3289740902067174e-07,
+        0.2044415031915283,
+        0.031550638072101865,
+        0.0,
+        0.028999999165534973,
+        -0.026000000536441803,
+        -0.0689999982714653,
+        1.0
+      ],
+      "name": "Mmengchong_10008_bingwenli_zhz_003_heat"
+    },
+    {
+      "mesh": 1,
+      "name": "Mmengchong_10008_bingwenli_zhz_003_heat_Mmengchong_10008_bingwenli_zhz_003_heat_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    }
+  ]
+}

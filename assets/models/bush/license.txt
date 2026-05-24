@@ -1,0 +1,11 @@
+Model Information:
+* title:	Small Low Res Bush
+* source:	https://sketchfab.com/3d-models/small-low-res-bush-b04c3f2143c74fcdac16b1ba2a53d97b
+* author:	AlkaliDragon (https://sketchfab.com/AlkaliDragon)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Small Low Res Bush" (https://sketchfab.com/3d-models/small-low-res-bush-b04c3f2143c74fcdac16b1ba2a53d97b) by AlkaliDragon (https://sketchfab.com/AlkaliDragon) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
