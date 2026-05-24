@@ -4,6 +4,7 @@ import base64
 import time
 import threading
 import os
+import gc
 import trimesh
 import pyrender
 import camera_connection
@@ -64,7 +65,11 @@ def setup_3d_scene(viewport_width, viewport_height):
     fx, fy = camera_matrix[0,0], camera_matrix[1,1]
     cx, cy = camera_matrix[0,2], camera_matrix[1,2]
     
-    virtual_camera = pyrender.IntrinsicsCamera(fx=fx, fy=fy, cx=cx, cy=cy)
+    # 🔄 [수정됨] 카메라가 밀리미터(mm) 단위의 먼 거리도 볼 수 있게 시야(znear, zfar) 설정 추가!
+    virtual_camera = pyrender.IntrinsicsCamera(
+        fx=fx, fy=fy, cx=cx, cy=cy,
+        znear=0.1, zfar=10000.0
+    )
     # 카메라는 항상 원점(0,0,0)에 고정하고, 체스보드(오브젝트)를 움직입니다.
     scene.add(virtual_camera, pose=np.eye(4)) 
 
@@ -91,7 +96,7 @@ def game_loop(socketio, cap_phone):
     scene, model_node, renderer = None, None, None
     
     # 💡 3D 모델의 크기를 조절하는 변수 (너무 크거나 작으면 이 숫자를 조절하세요!)
-    MODEL_SCALE = 1.0 
+    MODEL_SCALE = 100
 
     while is_running:
         ret_laptop, frame_laptop = cap_laptop.read()
@@ -124,7 +129,9 @@ def game_loop(socketio, cap_phone):
                 ret_board, corners = cv2.findChessboardCorners(gray, (BOARD_W, BOARD_H), None)
 
                 if ret_board and scene is not None:
+
                     # 좀 더 정밀한 코너 위치 찾기
+                    cv2.drawChessboardCorners(frame_phone, (BOARD_W, BOARD_H), corners, ret_board)
                     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
                     corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
 
@@ -152,10 +159,18 @@ def game_loop(socketio, cap_phone):
                         scale_matrix = np.eye(4)
                         scale_matrix[0,0] = scale_matrix[1,1] = scale_matrix[2,2] = MODEL_SCALE
 
-                        # 최종 포즈 = (축 뒤집기) * (PnP 위치) * (모델 크기)
-                        final_pose = flip_yz @ transform @ scale_matrix
-                        
-                        # 모델의 위치를 체스보드 위로 업데이트!
+                        # 🆕 [추가됨] 모델을 X축 기준으로 180도(pi) 강제 회전시키는 행렬
+                        # (만약 180도를 돌렸는데도 옆으로 누워있다면 np.pi / 2 (90도) 등으로 숫자를 바꿔보세요)
+                        angle_x = np.pi 
+                        rx = np.array([
+                            [1, 0, 0, 0],
+                            [0, np.cos(angle_x), -np.sin(angle_x), 0],
+                            [0, np.sin(angle_x),  np.cos(angle_x), 0],
+                            [0, 0, 0, 1]
+                        ])
+
+                        # 💡 회전 행렬(rx)을 중간에 끼워 넣어서 같이 곱해줍니다.
+                        final_pose = flip_yz @ transform @ rx @ scale_matrix
                         scene.set_pose(model_node, pose=final_pose)
 
                         # 4. 렌더링 수행 (배경은 투명하고 캐릭터만 그려진 이미지 반환)
@@ -181,7 +196,12 @@ def game_loop(socketio, cap_phone):
             'phone_img': phone_b64
         })
 
-        time.sleep(0.03) 
+        # 🔄 [수정됨] 네트워크 병목을 막기 위해 0.03에서 0.06으로 휴식 시간 늘림 (약 15 FPS로 안정화)
+        time.sleep(0.06) 
+        
+        # 🆕 [추가됨] 렌더링 과정에서 쌓인 불필요한 메모리를 강제로 즉시 비워냄
+        gc.collect()
+        
 
     # --- 종료 처리 ---
     print("\n[시스템] 카메라 자원을 안전하게 해제합니다...")

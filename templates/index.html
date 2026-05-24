@@ -82,9 +82,19 @@
             video.addEventListener('play', () => {
                 setInterval(() => {
                     if (video.videoWidth > 0 && video.videoHeight > 0) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
+                        
+                        // 🆕 [핵심 해결책] 영상 가로 해상도를 640px로 강제 축소
+                        const MAX_WIDTH = 640; 
+                        const scale = MAX_WIDTH / video.videoWidth;
+                        
+                        // 비율에 맞춰 캔버스 크기 줄이기
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = video.videoHeight * scale;
+                        
+                        // 줄어든 캔버스에 영상 그리기
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // 화질 0.5(50%)의 가벼운 JPEG로 압축해서 전송!
                         const dataURL = canvas.toDataURL('image/jpeg', 0.5); 
                         socket.emit('phone_frame_send', dataURL);
                     }
