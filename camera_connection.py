@@ -30,38 +30,40 @@ class PhoneCamera:
         @self.app.route('/')
         def index():
             return render_template('index.html', public_url=self.public_url, qr_img=self.qr_img_str)
-
+        
         @self.socketio.on('phone_frame_send')
         def handle_phone_frame(data):
             global phone_frame_global
             try:
                 if not data or ',' not in data:
-                    return
+                    return "error"
 
                 encoded_data = data.split(',')[1]
                 if not encoded_data:
-                    return
+                    return "error"
 
                 img_bytes = base64.b64decode(encoded_data)
                 if len(img_bytes) == 0:
-                    return
+                    return "error"
 
                 nparr = np.frombuffer(img_bytes, np.uint8)
                 if nparr.size == 0:
-                    return
+                    return "error"
 
                 decoded_frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
                 if decoded_frame is not None and decoded_frame.size > 0:
                     phone_frame_global = decoded_frame
                     
-                    # [핵심] 휴대폰 영상이 "정상적으로" 최초 디코딩 되었을 때 터미널에 출력!
                     if not self.first_frame_received:
                         print("\n✅ [성공] 휴대폰 카메라 영상 수신 및 디코딩 시작!")
                         self.first_frame_received = True
 
+                # 🆕 [핵심 추가] 해독이 끝났으니 휴대폰에게 다음 프레임을 보내라고 신호(Ack)를 보냅니다.
+                return "ok"
+
             except Exception as e:
-                pass
+                return "error"
 
         print("\n--- 서버 설정 중 ---")
         ngrok.set_auth_token(ngrok_token)
