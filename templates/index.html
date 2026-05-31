@@ -83,10 +83,9 @@
                 })
                 .catch(err => alert("권한 허용 필요: " + err));
             });
-            
+
             video.addEventListener('play', () => {
                 
-                // 🔄 [수정됨] 무조건 쏘는 setInterval을 없애고, 대답을 기다리는 함수로 변경
                 function sendNextFrame() {
                     if (video.videoWidth > 0 && video.videoHeight > 0) {
                         const MAX_WIDTH = 640; 
@@ -96,20 +95,32 @@
                         canvas.height = video.videoHeight * scale;
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
                         
-                        const dataURL = canvas.toDataURL('image/jpeg', 0.3); 
+                        const dataURL = canvas.toDataURL('image/jpeg', 0.15); 
                         
-                        // 💡 [핵심] 서버에 프레임을 보내고, 서버가 "ok" 대답을 하면 그때 다음 프레임을 준비함!
+                        let ackReceived = false; // 대답을 받았는지 체크하는 변수
+
+                        // 1. 서버에 프레임을 보냅니다.
                         socket.emit('phone_frame_send', dataURL, (response) => {
-                            // 대답을 받은 후 30ms 정도만 숨을 고르고 바로 다음 프레임 전송
-                            setTimeout(sendNextFrame, 30); 
+                            if (!ackReceived) {
+                                ackReceived = true;
+                                setTimeout(sendNextFrame, 30); // 정상적으로 대답을 받으면 바로 다음 전송
+                            }
                         });
+
+                        // 🆕 [핵심 추가] 2. 안전망(Timeout): 0.5초(500ms)가 지나도 대답이 없으면 억지로 다음 프레임 전송!
+                        setTimeout(() => {
+                            if (!ackReceived) {
+                                ackReceived = true;
+                                console.log("서버 응답 지연! 강제로 다음 프레임을 보냅니다.");
+                                sendNextFrame(); 
+                            }
+                        }, 500);
+
                     } else {
-                        // 카메라 로딩이 덜 됐으면 조금 기다렸다가 다시 시도
                         setTimeout(sendNextFrame, 100); 
                     }
                 }
                 
-                // 캐치볼 루프 시작!
                 sendNextFrame();
             });
 
