@@ -110,6 +110,8 @@ def game_loop(socketio, cap_phone):
             # [노트북 카메라: 제스처 인식 파트] (나중에 채워넣을 곳)
             # ---------------------------------------------------------
             if ret_laptop and frame_laptop is not None and getattr(frame_laptop, 'size', 0) > 0:
+
+                frame_laptop = cv2.flip(frame_laptop, 1)
                 ret, buffer = cv2.imencode('.jpg', frame_laptop, [cv2.IMWRITE_JPEG_QUALITY, 70])
                 if ret: laptop_b64 = 'data:image/jpeg;base64,' + base64.b64encode(buffer).decode('utf-8')
 
