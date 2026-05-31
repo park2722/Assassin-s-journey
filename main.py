@@ -17,9 +17,9 @@ is_running = True
 # ==========================================================
 # 1. 테스트용 체스보드 및 카메라 캘리브레이션 데이터 세팅
 # ==========================================================
-BOARD_W = 10
-BOARD_H = 7
-SQUARE_SIZE = 25.0  # 25mm
+BOARD_W = 8
+BOARD_H = 6
+SQUARE_SIZE = 30.0  # 30mm
 
 # 3D 공간의 체스보드 기준 좌표(objp) 생성
 objp = np.zeros((BOARD_W * BOARD_H, 3), np.float32)
@@ -131,7 +131,6 @@ def game_loop(socketio, cap_phone):
                 if ret_board and scene is not None:
 
                     # 좀 더 정밀한 코너 위치 찾기
-                    cv2.drawChessboardCorners(frame_phone, (BOARD_W, BOARD_H), corners, ret_board)
                     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
                     corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
 
@@ -201,7 +200,7 @@ def game_loop(socketio, cap_phone):
         
         # 🆕 [추가됨] 렌더링 과정에서 쌓인 불필요한 메모리를 강제로 즉시 비워냄
         gc.collect()
-        
+
 
     # --- 종료 처리 ---
     print("\n[시스템] 카메라 자원을 안전하게 해제합니다...")
