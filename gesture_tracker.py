@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import time  # 🆕 시간 측정을 위해 추가
 
 class GestureTracker:
     def __init__(self):
@@ -7,13 +8,16 @@ class GestureTracker:
         self.hands = self.mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
         self.mp_draw = mp.solutions.drawing_utils
         
-        # 🆕 [추가] 이전 프레임의 제스처 상태를 기억하는 변수
         self.last_gesture = "None" 
+        
+        # 🆕 [추가] 쿨다운(대기 시간) 시스템
+        self.last_action_time = 0.0
+        self.cooldown = 0.8  # 0.8초 동안은 아무리 손을 흔들어도 추가 입력을 철벽 방어! (필요에 따라 0.5, 1.0 등으로 조절)
 
     def process_frame(self, frame_laptop):
         gesture_text = "None"
         angle_delta = 0.0
-        current_gesture = "None" # 현재 프레임에서 인식된 순수 손 모양
+        current_gesture = "None"
 
         # 거울 모드(좌우 반전)
         frame_laptop = cv2.flip(frame_laptop, 1) 
@@ -28,24 +32,41 @@ class GestureTracker:
                 index_tip_x = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP].x
                 index_mcp_x = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_MCP].x
                 
-                # 순수하게 현재 손이 어느 쪽으로 꺾여 있는지 판별
-                if index_tip_x < index_mcp_x - 0.05:
+                # 🆕 ✊ 주먹 쥐기 판별: 4개 손가락 끝이 마디보다 아래(Y값이 큼)에 있는지 확인
+                is_fist = True
+                for tip, mcp in [(8, 5), (12, 9), (16, 13), (20, 17)]:
+                    if hand_landmarks.landmark[tip].y < hand_landmarks.landmark[mcp].y:
+                        is_fist = False # 하나라도 펴져있으면 주먹이 아님
+                        break
+                
+                if is_fist:
+                    current_gesture = "Fist"
+                elif index_tip_x < index_mcp_x - 0.05:
                     current_gesture = "Left Swipe"
                 elif index_tip_x > index_mcp_x + 0.05:
                     current_gesture = "Right Swipe"
         
-        # 🔄 [핵심 로직] 이전 프레임이 "None"이었고, 지금 "Swipe"일 때만 90도 각도를 줍니다 (1회성 트리거)
-        if current_gesture == "Left Swipe" and self.last_gesture == "None":
-            angle_delta = 90.0 # 한 번에 90도 회전
-            gesture_text = "Turn Left"
-        elif current_gesture == "Right Swipe" and self.last_gesture == "None":
-            angle_delta = -90.0 # 한 번에 90도 회전
-            gesture_text = "Turn Right"
-        else:
-            # 트리거가 발생하지 않은 평상시에는 현재 손 모양만 텍스트로 띄워줍니다.
-            gesture_text = current_gesture 
+        # 🆕 현재 시간을 가져와서 쿨다운 적용
+        current_time = time.time()
 
-        # 🆕 다음 프레임 비교를 위해 현재 상태를 저장
+        if current_time - self.last_action_time > self.cooldown:
+            if current_gesture == "Left Swipe" and self.last_gesture == "None":
+                angle_delta = 90.0 
+                gesture_text = "Turn Left"
+                self.last_action_time = current_time
+            elif current_gesture == "Right Swipe" and self.last_gesture == "None":
+                angle_delta = -90.0 
+                gesture_text = "Turn Right"
+                self.last_action_time = current_time
+            # 🚀 [추가] 주먹을 쥐었을 때 전진 명령 하달!
+            elif current_gesture == "Fist" and self.last_gesture == "None":
+                gesture_text = "Forward"  
+                self.last_action_time = current_time
+            else:
+                gesture_text = current_gesture 
+        else:
+            gesture_text = "Wait..."
+
         self.last_gesture = current_gesture
 
         # 상태 출력
