@@ -5,6 +5,7 @@ import threading
 import os
 import gc
 import camera_connection
+import random
 
 # 각 기능 모듈 Import
 from gesture_tracker import GestureTracker
@@ -26,6 +27,17 @@ def game_loop(socketio, cap_phone):
     tracker = GestureTracker()
     ar_engine = AREngine(viewport_width=640, viewport_height=480)
 
+    # 🆕 [추가] 게임 상태(State) 변수 초기화
+    char_pos = [4, 5]  # 캐릭터 시작 위치: 체스보드 맨 아랫줄 중간 (x:4, y:5)
+    bushes = set()     # 부쉬의 좌표를 담을 바구니 (set을 써서 좌표 중복 방지)
+
+    # 안전지대(가로 1~6, 세로 1~4) 안에 부쉬 10개 랜덤 생성
+    while len(bushes) < 10:
+        bx = random.randint(1, 6)
+        by = random.randint(1, 4)
+        if [bx, by] != char_pos:  # 캐릭터가 서 있는 곳에는 생성 금지
+            bushes.add((bx, by))
+
     print("게임 루프 가동 완료. 대시보드를 띄워주세요.")
 
     while is_running:
@@ -46,7 +58,8 @@ def game_loop(socketio, cap_phone):
 
             # 2. 폰 영상 + 각도 변화량 -> AR 엔진 팀
             if ret_phone and frame_phone is not None and getattr(frame_phone, 'size', 0) > 0:
-                frame_phone = ar_engine.render(frame_phone, angle_delta)
+                # 🔄 [수정] 렌더러에 캐릭터 좌표(char_pos)와 부쉬 목록(bushes)을 함께 넘겨줍니다!
+                frame_phone = ar_engine.render(frame_phone, angle_delta, char_pos, bushes)
                 
                 send_frame = cv2.resize(frame_phone, (640, 480)) 
                 ret, buffer = cv2.imencode('.jpg', send_frame, [cv2.IMWRITE_JPEG_QUALITY, 50]) 
