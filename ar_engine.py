@@ -99,8 +99,8 @@ class AREngine:
                 scale_matrix[0,0] = scale_matrix[1,1] = scale_matrix[2,2] = self.MODEL_SCALE
 
                 angle_x = np.radians(0)    
-                angle_y = np.radians(self.current_y_angle)  
-                angle_z = np.radians(0)
+                angle_y = np.radians(180)  
+                angle_z = np.radians(self.current_y_angle) # 👈 회전값을 Z축으로 이동
 
                 rx = np.array([[1, 0, 0, 0], [0, np.cos(angle_x), -np.sin(angle_x), 0], [0, np.sin(angle_x),  np.cos(angle_x), 0], [0, 0, 0, 1]])
                 ry = np.array([[np.cos(angle_y), 0, np.sin(angle_y), 0], [0, 1, 0, 0], [-np.sin(angle_y), 0,  np.cos(angle_y), 0], [0, 0, 0, 1]])
