@@ -11,7 +11,7 @@ class GestureTracker:
         self.last_gesture = "None" 
         self.last_action_time = 0.0
         self.cooldown = 0.8  
-        self.last_wrist_y = None # 🆕 손목의 Y좌표 변화를 추적하기 위한 변수
+        self.y_history = [] 
 
     def process_frame(self, frame_laptop):
         gesture_text = "None"
@@ -29,24 +29,27 @@ class GestureTracker:
                 index_tip_x = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP].x
                 index_mcp_x = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_MCP].x
                 
-                # 🆕 손목(0번 랜드마크)의 Y좌표를 가져옵니다.
                 wrist_y = hand_landmarks.landmark[0].y
+                self.y_history.append(wrist_y)
+                if len(self.y_history) > 10:
+                    self.y_history.pop(0)
                 
-                # 🆕 Down Swipe 판별: 이전 프레임보다 손목이 0.1 이상(빠르게) 아래로 내려갔는지 확인
                 is_swipe_down = False
-                if self.last_wrist_y is not None:
-                    if wrist_y - self.last_wrist_y > 0.1:
+                if len(self.y_history) >= 5: 
+                    if wrist_y - self.y_history[0] > 0.15:
                         is_swipe_down = True
-                self.last_wrist_y = wrist_y # 다음 프레임 비교를 위해 저장
+                        self.y_history.clear() 
                 
-                # 주먹 판별 (손바닥을 카메라 정면으로 보인 상태에서만 작동하도록 Y좌표 차이를 넉넉하게 줌)
+                # 🚀 [완벽한 주먹 판별법] 손가락 끝과 마디 사이의 거리를 계산합니다!
+                # 손을 어떻게 눕히든, 거리가 0.08 이내로 좁혀지면 무조건 주먹으로 인정합니다.
                 is_fist = True
                 for tip, mcp in [(8, 5), (12, 9), (16, 13), (20, 17)]:
-                    if hand_landmarks.landmark[tip].y < hand_landmarks.landmark[mcp].y + 0.02:
+                    dist = ((hand_landmarks.landmark[tip].x - hand_landmarks.landmark[mcp].x)**2 + 
+                            (hand_landmarks.landmark[tip].y - hand_landmarks.landmark[mcp].y)**2)**0.5
+                    if dist > 0.08: 
                         is_fist = False 
                         break
                 
-                # 💡 우선순위: 아래로 내리는 움직임이 가장 먼저 감지되도록 설정
                 if is_swipe_down:
                     current_gesture = "Down Swipe"
                 elif is_fist:
@@ -56,7 +59,7 @@ class GestureTracker:
                 elif index_tip_x > index_mcp_x + 0.05:
                     current_gesture = "Right Swipe"
         else:
-            self.last_wrist_y = None # 손이 화면 밖으로 나가면 리셋
+            self.y_history.clear() 
         
         current_time = time.time()
 
@@ -72,7 +75,7 @@ class GestureTracker:
             elif current_gesture == "Fist" and self.last_gesture == "None":
                 gesture_text = "Forward"  
                 self.last_action_time = current_time
-            elif current_gesture == "Down Swipe": # 💡 연속 동작이므로 last_gesture "None" 조건 제외
+            elif current_gesture == "Down Swipe": 
                 gesture_text = "Flee"
                 self.last_action_time = current_time
             else:

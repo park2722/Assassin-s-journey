@@ -47,12 +47,8 @@ def game_loop(socketio, cap_phone):
 
         try:
             if ret_laptop and frame_laptop is not None:
-                frame_laptop, angle_delta, gesture = tracker.process_frame(frame_laptop)
+                frame_laptop, _, gesture = tracker.process_frame(frame_laptop)
                 
-                # 🛡️ [버그 픽스] 전투 중에는 3D 캐릭터가 회전하지 못하도록 각도 변화량을 0으로 덮어씁니다!
-                if game_state == "BATTLE":
-                    angle_delta = 0.0
-
                 if game_state == "EXPLORE":
                     if gesture == "Turn Left":
                         char_dir = (char_dir - 1) % 4
@@ -113,7 +109,9 @@ def game_loop(socketio, cap_phone):
 
             if ret_phone and frame_phone is not None:
                 battle_info = {'is_battle': game_state == "BATTLE"}
-                frame_phone = ar_engine.render(frame_phone, angle_delta, char_pos, bushes, battle_info)
+                
+                # 🚀 angle_delta 대신 현재 내가 보고 있는 방향(char_dir)을 렌더러에 직접 전달!
+                frame_phone = ar_engine.render(frame_phone, char_dir, char_pos, bushes, battle_info)
                 
                 send_frame = cv2.resize(frame_phone, (640, 480)) 
                 ret, buffer = cv2.imencode('.jpg', send_frame, [cv2.IMWRITE_JPEG_QUALITY, 50]) 

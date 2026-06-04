@@ -46,9 +46,11 @@ class AREngine:
         return gx * self.SQUARE_SIZE + (self.SQUARE_SIZE / 2.0), gy * self.SQUARE_SIZE + (self.SQUARE_SIZE / 2.0)
 
     # 🔄 battle_info 파라미터 추가
-    def render(self, frame_phone, angle_delta, char_pos, bushes, battle_info):
+    def render(self, frame_phone, char_dir, char_pos, bushes, battle_info):
         frame_phone = cv2.resize(frame_phone, (640, 480))
-        self.current_y_angle += angle_delta
+        dir_angles = {0: 180.0, 1: 90.0, 2: 0.0, 3: 270.0}
+        
+        self.current_y_angle = dir_angles[char_dir]
         gray = cv2.cvtColor(frame_phone, cv2.COLOR_BGR2GRAY)
         ret_board, corners = cv2.findChessboardCorners(gray, (self.BOARD_W, self.BOARD_H), None)
 
