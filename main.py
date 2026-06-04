@@ -6,6 +6,7 @@ import os
 import gc
 import random 
 import camera_connection
+import requests
 
 from gesture_tracker import GestureTracker
 from ar_engine import AREngine
@@ -40,6 +41,26 @@ def game_loop(socketio, cap_phone):
             bushes.add((bx, by))
 
     print("게임 루프 가동 완료. 대시보드를 띄워주세요.", flush=True)
+
+    # ==========================================================
+    # 🆕 [접속 링크 출력] QR 창 대신 터미널에 클릭 가능한 링크를 띄워줍니다!
+    # ==========================================================
+    def print_ngrok_url():
+        print("🔗 Ngrok 공개 URL을 불러오는 중...", flush=True)
+        time.sleep(2) # 서버가 열릴 시간을 살짝 줍니다.
+        try:
+            res = requests.get("http://localhost:4040/api/tunnels")
+            ngrok_url = [t["public_url"] for t in res.json()["tunnels"] if t["proto"] == "https"][0]
+            
+            print("\n===================================================", flush=True)
+            print(f"🌟 게임 접속 링크: {ngrok_url}", flush=True)
+            print("===================================================", flush=True)
+            print("👉 팁: 위 링크에 마우스를 올리고 [Ctrl + 클릭]하면 브라우저가 바로 열립니다!\n", flush=True)
+            
+        except Exception as e:
+            print("🚨 Ngrok URL을 찾을 수 없습니다. Ngrok 터미널 창의 링크를 직접 확인해주세요.", flush=True)
+
+    print_ngrok_url() # 함수 실행!
 
     while is_running:
         ret_laptop, frame_laptop = cap_laptop.read()
