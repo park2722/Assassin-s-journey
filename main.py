@@ -150,8 +150,14 @@ def game_loop(socketio, cap_phone):
             time.sleep(0.01)
             continue
 
-        socketio.emit('update_dashboard', {'laptop_img': laptop_b64, 'phone_img': phone_b64})
-        time.sleep(0.05); gc.collect()
+        socketio.emit('update_dashboard', {
+            'laptop_img': laptop_b64,
+            'phone_img': phone_b64,
+            'game_log': event_msg  
+        })
+
+        time.sleep(0.05) 
+        gc.collect()
 
     # 🛑 [종료 로직 수정] 종료 메시지가 출력될 시간을 벌어주고 깔끔하게 닫습니다.
     print("\n[시스템] 카메라 자원을 안전하게 해제합니다...", flush=True)

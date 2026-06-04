@@ -49,6 +49,14 @@
                 <img id="laptopView" src="" alt="웹캠 로딩 중...">
             </div>
         </div>
+
+        <div style="margin: 20px auto; width: 80%; max-width: 800px; text-align: left;">
+            <h3>📜 System Log</h3>
+            <div id="log-box" style="height: 150px; overflow-y: auto; background-color: #1e1e1e; color: #00ff00; padding: 15px; font-family: monospace; border-radius: 8px; border: 1px solid #444;">
+            [시스템] AR Creature Game에 연결되었습니다.<br>
+            </div>
+         </div>
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -107,7 +115,7 @@
                             }
                         });
 
-                        // 🆕 [핵심 추가] 2. 안전망(Timeout): 0.5초(500ms)가 지나도 대답이 없으면 억지로 다음 프레임 전송!
+                        // 2. 안전망(Timeout): 0.5초(500ms)가 지나도 대답이 없으면 억지로 다음 프레임 전송!
                         setTimeout(() => {
                             if (!ackReceived) {
                                 ackReceived = true;
@@ -138,12 +146,42 @@
                 }
             });
 
+            let lastLog = "Game Started"; 
+
             socket.on('update_dashboard', (data) => {
+                // ==========================================
+                // 1. 유저님의 기존 코드 (이미지 처리 및 QR 숨김) 
+                // ==========================================
                 if (data.laptop_img) laptopView.src = data.laptop_img;
-                
+            
                 if (data.phone_img) {
                     phoneView.src = data.phone_img;
                     if (qrArea.style.display !== 'none') qrArea.style.display = 'none';
+                }
+
+                // ==========================================
+                // 2. 🆕 새로 추가되는 실시간 로그 처리 파트
+                // ==========================================
+                // 파이썬에서 game_log를 보냈고, 그 내용이 방금 전과 다르다면?
+                if (data.game_log && data.game_log !== lastLog) {
+                    const logBox = document.getElementById('log-box');
+                
+                    if (logBox) { // logBox가 HTML에 제대로 있는지 확인
+                        // 현재 시간(시:분:초) 예쁘게 만들기
+                        const now = new Date();
+                        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                                    now.getMinutes().toString().padStart(2, '0') + ":" + 
+                                    now.getSeconds().toString().padStart(2, '0');
+                    
+                        // 로그창에 시간 + 파이썬이 보낸 메시지 추가
+                        logBox.innerHTML += `[${timeStr}] ${data.game_log}<br>`;
+                    
+                        // 글씨가 넘치면 스크롤을 항상 맨 아래(최신)로 자동 이동
+                        logBox.scrollTop = logBox.scrollHeight; 
+                    }
+                
+                    // 방금 띄운 메시지를 기억해둬서 다음 0.05초 뒤에 또 똑같은 걸 안 띄우게 방어
+                    lastLog = data.game_log; 
                 }
             });
         }
