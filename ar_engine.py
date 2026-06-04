@@ -13,7 +13,7 @@ class AREngine:
         self.BUSH_SCALE = 17.0
         self.CREATURE_SCALE = 25.0 # 🆕 크리처 크기 조절
         
-        self.OFFSET_X, self.OFFSET_Y, self.OFFSET_Z = 110.0, 75.0, 0.0
+        self.OFFSET_X, self.OFFSET_Y, self.OFFSET_Z = 0.0, -75.0, 0.0
         self.current_y_angle = 180.0 
 
         try:
