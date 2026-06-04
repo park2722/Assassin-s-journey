@@ -25,7 +25,8 @@ def game_loop(socketio, cap_phone):
     prev_pos = [4, 5]      
     char_dir = 0 
     creature_hp = 2        
-    
+    current_creature_idx = 0
+
     bushes = set()
     event_msg = "Game Started" 
 
@@ -70,11 +71,15 @@ def game_loop(socketio, cap_phone):
                             event_msg = f"Moved to [{nx}, {ny}]"
                             
                             if tuple(char_pos) in bushes:
+                                # 💡 아직 빠른 테스트를 위해 1.0(100%)로 두겠습니다.
                                 if random.random() < 1.0: 
                                     game_state = "BATTLE"
                                     creature_hp = 2
-                                    event_msg = "BATTLE! Attack or Catch!"
-                                    print("⚡ 앗! 야생의 크리처가 튀어나왔다!!", flush=True)
+                                    # 🆕 0~2 사이의 랜덤한 크리처 인덱스 뽑기
+                                    current_creature_idx = random.randint(0, 2) 
+                                    
+                                    event_msg = f"BATTLE! Creature {current_creature_idx + 1} Appeared!"
+                                    print(f"⚡ 앗! 야생의 크리처 {current_creature_idx + 1}가 튀어나왔다!!", flush=True)
 
                 elif game_state == "BATTLE":
                     if gesture == "Forward": 
@@ -108,9 +113,12 @@ def game_loop(socketio, cap_phone):
                 angle_delta = 0.0
 
             if ret_phone and frame_phone is not None:
-                battle_info = {'is_battle': game_state == "BATTLE"}
+                # 🔄 현재 싸우고 있는 크리처 인덱스를 렌더러에 같이 넘겨줍니다!
+                battle_info = {
+                    'is_battle': game_state == "BATTLE",
+                    'creature_idx': current_creature_idx
+                }
                 
-                # 🚀 angle_delta 대신 현재 내가 보고 있는 방향(char_dir)을 렌더러에 직접 전달!
                 frame_phone = ar_engine.render(frame_phone, char_dir, char_pos, bushes, battle_info)
                 
                 send_frame = cv2.resize(frame_phone, (640, 480)) 

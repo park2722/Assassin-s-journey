@@ -11,7 +11,7 @@ class AREngine:
 
         self.MODEL_SCALE = 100.0 
         self.BUSH_SCALE = 17.0
-        self.CREATURE_SCALE = 60.0 # 🆕 크리처 크기 조절
+        self.CREATURE_SCALE = 25.0 # 🆕 크리처 크기 조절
         
         self.OFFSET_X, self.OFFSET_Y, self.OFFSET_Z = 110.0, 75.0, 0.0
         self.current_y_angle = 180.0 
@@ -33,8 +33,14 @@ class AREngine:
         self.bush_nodes = [self.scene.add(bush_mesh, name='bush') for _ in range(10)]
 
         # 🆕 3. 크리처 로드
-        creature_mesh = pyrender.Mesh.from_trimesh(list(trimesh.load('assets/models/creature_1/scene.gltf').geometry.values()))
-        self.creature_node = self.scene.add(creature_mesh, name='creature_1')
+        self.creature_nodes = []
+        for i in range(1, 4): # 1, 2, 3 번 크리처 로드
+            try:
+                c_mesh = pyrender.Mesh.from_trimesh(list(trimesh.load(f'assets/models/creature_{i}/scene.gltf').geometry.values()))
+                self.creature_nodes.append(self.scene.add(c_mesh, name=f'creature_{i}'))
+            except Exception as e:
+                print(f"🚨 크리처 {i} 로드 실패: {e}")
+                exit()
 
         light = pyrender.DirectionalLight(color=np.ones(3), intensity=5.0)
         self.scene.add(light, pose=np.eye(4))
@@ -103,17 +109,31 @@ class AREngine:
                         self.scene.set_pose(node, pose=hidden)
 
                 # 🐉 크리처 렌더링
-                if battle_info['is_battle']:
-                    creature_trans = np.eye(4)
-                    creature_trans[0, 3] = cx + 10.0 + self.OFFSET_X # 캐릭터의 반대편(앞쪽)으로 10.0 이동
-                    creature_trans[1, 3] = cy + self.OFFSET_Y
-                    c_scale = np.eye(4); c_scale[0,0] = c_scale[1,1] = c_scale[2,2] = self.CREATURE_SCALE
-                    # 크리처가 캐릭터를 마주보도록 회전 (필요시 Z축 회전 조절)
-                    c_rot = np.eye(4) 
-                    self.scene.set_pose(self.creature_node, pose=flip_yz @ transform @ creature_trans @ c_rot @ c_scale)
-                else:
-                    hidden = np.eye(4); hidden[2, 3] = 10000.0
-                    self.scene.set_pose(self.creature_node, pose=hidden)
+                # 🐉 크리처 렌더링 (전투 중일 때만)
+                active_c_idx = battle_info.get('creature_idx', 0)
+                
+                # 🔄 [크리처 회전 행렬] 거꾸로 뒤집혀 있다면 X축이나 Z축을 180도 돌려보세요!
+                c_angle_x = np.radians(180) # 💡 뒤집혀있을 때 세우는 축 (필요시 90, -90, 0 등으로 조절)
+                c_angle_y = np.radians(0)
+                c_angle_z = np.radians(0)   # 💡 옆으로 누워있을 때 세우는 축
+
+                crx = np.array([[1, 0, 0, 0], [0, np.cos(c_angle_x), -np.sin(c_angle_x), 0], [0, np.sin(c_angle_x),  np.cos(c_angle_x), 0], [0, 0, 0, 1]])
+                cry = np.array([[np.cos(c_angle_y), 0, np.sin(c_angle_y), 0], [0, 1, 0, 0], [-np.sin(c_angle_y), 0,  np.cos(c_angle_y), 0], [0, 0, 0, 1]])
+                crz = np.array([[np.cos(c_angle_z), -np.sin(c_angle_z), 0, 0], [np.sin(c_angle_z), np.cos(c_angle_z), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+                creature_rot = crx @ cry @ crz
+
+                for i, node in enumerate(self.creature_nodes):
+                    if battle_info['is_battle'] and i == active_c_idx:
+                        creature_trans = np.eye(4)
+                        creature_trans[0, 3] = cx + 10.0 + self.OFFSET_X 
+                        creature_trans[1, 3] = cy + self.OFFSET_Y
+                        c_scale = np.eye(4); c_scale[0,0] = c_scale[1,1] = c_scale[2,2] = self.CREATURE_SCALE
+                        
+                        # 회전(creature_rot) 적용!
+                        self.scene.set_pose(node, pose=flip_yz @ transform @ creature_trans @ creature_rot @ c_scale)
+                    else:
+                        hidden = np.eye(4); hidden[2, 3] = 10000.0
+                        self.scene.set_pose(node, pose=hidden)
 
                 color, depth = self.renderer.render(self.scene, flags=pyrender.RenderFlags.RGBA)
                 alpha_channel = color[:, :, 3] / 255.0
