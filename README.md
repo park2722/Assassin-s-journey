@@ -45,8 +45,9 @@
 프로젝트 폴더에서 가상 환경(venv)을 생성하고 필요한 라이브러리를 설치합니다.
 ```bash
 python -m venv venv
-call venv\Scripts\activate   # Mac/Linux: source venv/bin/activate
-pip install opencv-python mediapipe numpy trimesh pyrender flask flask-socketio requests  
+call venv\Scripts\activate   # Mac/Linux: source venv/bin/activate  
+pip install opencv-python mediapipe numpy trimesh pyrender flask flask-socketio requests PyOpenGL simple-websocket
+```
 
 ### 3. Ngrok 토큰 입력
 `main.py` 파일을 열고 상단의 `NGROK_TOKEN` 변수에 본인의 토큰을 입력합니다.
@@ -80,10 +81,11 @@ NGROK_TOKEN = "여기에_본인의_토큰_입력"
 ### 5. 게임 실행 (Windows 전용)
 폴더에 포함된 **`Run_Game.bat`** 파일을 더블클릭하면 자동으로 가상환경 활성화, 한글 인코딩 패치, 서버 구동이 완료되며 터미널에 **접속 링크**가 출력됩니다.  
 (해당 링크를 `Ctrl + 클릭` 하여 브라우저를 열어주세요.)  
-
-[.bat Run_Game]()
+[.bat Run_Game](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Run_Game_bat.png)  
 
 링크를 클릭하면 해당 화면의 웹사이트로 이어집니다.  
+[Defalt_Website](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Defalt_Website.png)  
+
 
 
 <br>
