@@ -1,0 +1,12 @@
+opencv-python
+mediapipe==0.10.5
+numpy
+trimesh
+pyrender
+flask
+flask-socketio
+requests
+pyngrok
+qrcode[pil]
+PyOpenGL
+simple-websocket
