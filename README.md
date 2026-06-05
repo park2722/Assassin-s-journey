@@ -41,21 +41,13 @@
 - [Ngrok 계정 및 Auth Token](https://dashboard.ngrok.com/get-started/your-authtoken) (무료)  
   현재 제작자의 계정으로 테스트 Token이 포함되어 있지만, Ngrok 서버가 불안정해질 수 있으므로 반드시 본인 계정으로 발급받은 토큰을 입력하는 것을 권장드립니다.
 
-### 2. 패키지 설치
-프로젝트 폴더에서 가상 환경(venv)을 생성하고 필요한 라이브러리를 설치합니다.
-```bash
-python -m venv venv
-call venv\Scripts\activate   # Mac/Linux: source venv/bin/activate  
-pip install opencv-python mediapipe numpy trimesh pyrender flask flask-socketio requests PyOpenGL simple-websocket
-```
-
-### 3. Ngrok 토큰 입력
+### 2. Ngrok 토큰 입력
 `main.py` 파일을 열고 상단의 `NGROK_TOKEN` 변수에 본인의 토큰을 입력합니다.
 ```python
 NGROK_TOKEN = "여기에_본인의_토큰_입력" 
 ```
 
-### 4. 에셋 및 캘리브레이션 데이터 세팅
+### 3. 에셋 및 캘리브레이션 데이터 세팅
 해당 프로젝트에서는 아래와 같은 폴더 구조로 3D 모델과 카메라 캘리브레이션 데이터를 관리합니다.  
 (체스보드 패턴과 3D 모델은 `assets` 폴더 내에 포함되어 있습니다.)
 ```text
@@ -78,8 +70,8 @@ NGROK_TOKEN = "여기에_본인의_토큰_입력"
 직접 찍은 이미지를 calibration_data에 추가해주세요.  
 이후 'calibrate_camera.py'를 활용해 체스보드 패턴을 이용한 캘리브레이션을 진행하여 `camera_matrix.npy`와 `dist_coeffs.npy` 파일로 저장해 주세요.
 
-### 5. 게임 실행 (Windows 전용)
-폴더에 포함된 **`Run_Game.bat`** 파일을 더블클릭하면 자동으로 가상환경 활성화, 한글 인코딩 패치, 서버 구동이 완료되며 터미널에 **접속 링크**가 출력됩니다.  
+### 4. 게임 실행 (Windows 전용)
+폴더에 포함된 **`Run_Game.bat`** 파일을 더블클릭하면 자동으로 가상환경 활성화, 한글 인코딩 패치, 서버 구동이 완료되며 터미널에 **접속 링크**가 출력됩니다.(+ 실행에 필요한 requirements.txt의 패키지 설치)  
 (해당 링크를 `Ctrl + 클릭` 하여 브라우저를 열어주세요.)  
 ![.bat Run_Game](https://github.com/park2722/Assassin-s-journey/blob/main/README_images/Run_Game_bat.png)  
 
@@ -116,13 +108,13 @@ NGROK_TOKEN = "여기에_본인의_토큰_입력"
 ![Catch](https://github.com/park2722/Assassin-s-journey/blob/main/README_images/Catch.png)
 - **도망 (Flee):** 손바닥을 활짝 펴고 위에서 아래로 슥 내리기 (Down Swipe) -> 이전 칸으로 후퇴  
 ![Run_Away](https://github.com/park2722/Assassin-s-journey/blob/main/README_images/Run_away.png)  
-전투 종료 시에는 bush가 사라집니다.
-
-<br>
+전투 종료 시에는 bush가 사라집니다.  
 
 ## 게임 종료
 Dashboard 상단의 **프로그램 완전 종료**를 누르면 아래 화면과 함께 서버가 완전히 종료됩니다.  
-![Terminate](https://github.com/park2722/Assassin-s-journey/blob/main/README_images/Termination.png)
+![Terminate](https://github.com/park2722/Assassin-s-journey/blob/main/README_images/Termination.png)  
+
+<br>
 
 ## 문제 해결 (Troubleshooting)
 
