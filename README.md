@@ -86,25 +86,43 @@ NGROK_TOKEN = "여기에_본인의_토큰_입력"
 링크를 클릭하면 해당 화면의 웹사이트로 이어집니다.  
 [Defalt_Website](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Defalt_Website.png)  
 
-
+대시보드 상단에 위치한 QR코드를 스마트폰을 스캔하면 아래와 같은 모바일 화면이 나타납니다.  
+[Mobile_Website](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Mobile_Web_Dashboard.png)  
+카메라 켜기를 누르고 Checkerboard를 비춰주면 AR 화면이 나타납니다.  
 
 <br>
 
 ## 플레이 가이드 (How to Play)
+기본적인 UI에 대한 설명입니다.
+[Gesture](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Gesture.png)  
+- 좌상단 : 스마트폰을 송출하고 있는 checkerboard 화면 (AR 렌더링)
+- 우상단 : 노트북 웹캠 화면 (제스처 인식) + 상태를 보여주는 Text
+- 하단 : 게임 내 이벤트 로그 (조우, 공격, 포획 등)
 
 ### 탐험 모드 (EXPLORE State)
-체스보드 위에 랜덤으로 생성된 부쉬(Bush)를 향해 이동하세요! 부쉬에 진입하면 확률적으로 야생의 크리처와 조우합니다.
+체스보드 위에 랜덤으로 생성된 부쉬(Bush)를 향해 이동할 수 있습니다. 부쉬에 진입하면 확률적으로 야생의 크리처와 조우합니다.
 - **방향 전환:** 손바닥을 펴고 화면을 향해 좌/우로 휙 넘기기 (Left/Right Swipe) 
-  *(※ 체스판 기준 절대 각도로 90도씩 회전합니다.)*
-- **전진:** 카메라를 향해 주먹(Fist) 꽉 쥐기
+  *(※ 체스판 기준 절대 각도로 90도씩 회전합니다.)*  
+[Turn_Left](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Turn_Left.png)  [Turn_Right](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Turn_Right.png)  
+
+- **전진:** 카메라를 향해 주먹(Fist) 꽉 쥐기  
+[Forward](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Forward.png)  
 
 ### 전투 모드 (BATTLE State)
 크리처와 마주치면 전투 상태로 돌입하며 이동이 제한됩니다.
 - **공격 (Hit):** 손바닥 좌/우 스와이프 (크리처 HP 2회 타격 시 승리)
-- **포획 (Catch):** 주먹 쥐기 (확률적으로 몬스터 포획 성공)
+[Attack](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Attack.png)  
+- **포획 (Catch):** 주먹 쥐기 (확률적으로 몬스터 포획 성공)  
+[Catch](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Catch.png)
 - **도망 (Flee):** 손바닥을 활짝 펴고 위에서 아래로 슥 내리기 (Down Swipe) -> 이전 칸으로 후퇴
+[Run_Away](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Run_away.png)
+전투 종료 시에는 bush가 사라집니다.
 
 <br>
+
+## 게임 종료
+Dashboard 상단의 **프로그램 완전 종료**를 누르면 아래 화면과 함께 서버가 완전히 종료됩니다.
+[Terminate](https://github.com/park2722/Encounter-and-Capture-Creature/blob/main/README_images/Termination.png)
 
 ## 문제 해결 (Troubleshooting)
 
