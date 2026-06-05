@@ -1,4 +1,4 @@
-# AR Encounter and Capture Creature 
+# Assassin's journey
 
 노트북 웹캠의 **AI 제스처 인식**과 스마트폰 카메라의 **AR 3D 렌더링**을 결합한 실시간 증강현실 몬스터 포획 게임입니다. 
 체스보드 위를 탐험하며 야생의 크리처를 만나고, 손동작을 통해 전투와 포획을 진행할 수 있습니다.
